@@ -4,12 +4,11 @@ class BacklogsController < ApplicationController
   unloadable
   before_filter :find_backlog, :only => [:show, :update]
   before_filter :find_project, :authorize
+  before_filter :setup_cookies, :only => :index
 
   protect_from_forgery :only => []
 
   def index
-    cookies[:hide_closed_backlogs] = "true" unless cookies[:hide_closed_backlogs]    
-    @hide_closed_backlogs = (cookies[:hide_closed_backlogs] == "true")
     @main_backlog  = Backlog.find_main_backlog
     @items         = Item.find_by_project(@project, @hide_closed_backlogs, @main_backlog)
     @item_template = Item.new
@@ -42,4 +41,10 @@ class BacklogsController < ApplicationController
                  Backlog.find(params[:id])
                end
   end
+  
+  def setup_cookies
+    @hide_closed_backlogs = cookies[:hide_closed_backlogs] ? (cookies[:hide_closed_backlogs] == "true") : true
+    @hide_tasks = cookies[:hide_tasks] ? (cookies[:hide_tasks] == "true") : true
+  end
+  
 end

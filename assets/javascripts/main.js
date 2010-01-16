@@ -1,7 +1,13 @@
 var RBL = {};
 
 RBL.init = function(){
-  var backlog;
+	// For some reason we can't set cookiestate in rails on the first request, so
+	// we'll use the fact that the checkboxes are checked serverside to create the cookie here.
+	// The end goal being that the first request should default to hide tasks and closed backlogs.
+	if(document.cookie.match(/hide_tasks/)==null)
+		  RBL.storePreferences();
+
+	var backlog;
   $$(".backlog").each(function(element){
     backlog = new RBL.Backlog(element);
     backlog.observe("close", RBL.processClosedBacklogs, "rbl-main");
@@ -12,7 +18,11 @@ RBL.init = function(){
   $("new_item_button").observe("change", function() { RBL.newItem(); });
   $("hide_closed_backlogs").checked = (document.cookie.match(/hide_closed_backlogs=true/)!=null);
   $("hide_closed_backlogs").observe("click", function() { RBL.storePreferences(); RBL.processClosedBacklogs() });
+  $("hide_tasks").checked = (document.cookie.match(/hide_tasks=true/)!=null);
+  $("hide_tasks").observe("click", function() { RBL.storePreferences(); RBL.hideOrShowTasks(); });
   
+	RBL.hideOrShowTasks();
+
   RBL.log("Backlogs Plugin initialized.");
 }
 
@@ -62,6 +72,18 @@ RBL.newItem = function(){
   new PeriodicalExecuter(function(pe){ item.edit(); pe.stop() }, 0.15);
 }
 
+RBL.hideOrShowTasks = function() {
+	console.log($("hide_tasks").checked);
+  if($("hide_tasks").checked) {
+		$$(".item_tasks").each(function(e) { e.hide() });
+		$$(".add_task").each(function(e) { e.hide() });
+	}
+	else {
+		$$(".item_tasks").each(function(e) { e.show() });
+		$$(".add_task").each(function(e) { e.show() });		
+	}
+}
+
 RBL.processClosedBacklogs = function(){
   if(document.cookie.match(/hide_closed_backlogs=true/)!=null){
     RBL.Backlog.findAll().each(function(backlog){
@@ -78,6 +100,8 @@ RBL.storePreferences = function(){
 
   document.cookie = "hide_closed_backlogs=" + ($("hide_closed_backlogs").checked ? "true" : "false") + "; " +
                     "expires=" + expiration.toGMTString();
+	document.cookie =  "hide_tasks=" + ($("hide_tasks").checked ? "true" : "false") + "; " +
+	                 	 "expires=" + expiration.toGMTString();
 }
 
 
