@@ -56,8 +56,16 @@ class Backlog < ActiveRecord::Base
   end
   
 
-  def self.find_by_project(project, hide_closed_backlogs = false)
-    find(:all, :include => :version, :conditions => "versions.project_id=#{project.id} #{"AND is_closed = false" if hide_closed_backlogs}", :order => "versions.effective_date ASC, versions.id ASC")
+  def self.find_by_project(project, hide_closed_backlogs = false, main_backlog = nil)
+    find(:all, :include => :version,
+               :conditions => "versions.project_id=#{project.id} " +
+                              "#{"AND (backlogs.is_closed = false OR backlogs.id = #{main_backlog.id})" if hide_closed_backlogs}",
+               :order => "versions.effective_date ASC, versions.id ASC")
+  end
+  
+  def self.find_main_backlog
+    # We want to use an existing version as our backlog (simpler to query, works with the existing database and so forth).
+    Backlog.first(:include => [ :version ], :conditions => "versions.description LIKE '%#backlog%'")
   end
   
   def self.update(params)

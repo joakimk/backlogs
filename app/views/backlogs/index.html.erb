@@ -19,15 +19,15 @@
   <%- @backlogs.each do |backlog| %>
     <%- unless @hide_closed_backlogs && backlog.is_closed? %>
     <div class="backlog <%= backlog.is_closed? ? "closed" : "" %>">
-      <%= render :partial => "header", :locals => { :backlog => backlog } %>
+      <%= render :partial => "header", :locals => { :backlog => backlog, :main => false } %>
       <ul><%= render :partial => "items/item", :collection => @items.select{|item| item.backlog_id==backlog.id} %></ul>
     </div>
     <%- end %>
   <%- end %>
 
   <div class="backlog main">
-    <%= render :partial => "header", :locals => { :backlog => nil } %>
-    <ul><%= render :partial => "items/item", :collection => @items.select{|item| item.backlog_id==0} %></ul>
+    <%= render :partial => "header", :locals => { :backlog => @main_backlog, :main => true } %>
+    <ul><%= render :partial => "items/item", :collection => @items.select{|item| item.backlog_id==@main_backlog.id} %></ul>
   </div>
 </div>
 

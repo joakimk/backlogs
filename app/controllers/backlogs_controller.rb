@@ -10,9 +10,10 @@ class BacklogsController < ApplicationController
   def index
     cookies[:hide_closed_backlogs] = "true" unless cookies[:hide_closed_backlogs]    
     @hide_closed_backlogs = (cookies[:hide_closed_backlogs] == "true")
-    @items         = Item.find_by_project(@project, @hide_closed_backlogs)
+    @main_backlog  = Backlog.find_main_backlog
+    @items         = Item.find_by_project(@project, @hide_closed_backlogs, @main_backlog)
     @item_template = Item.new
-    @backlogs      = Backlog.find_by_project(@project, @hide_closed_backlogs)
+    @backlogs      = Backlog.find_by_project(@project, @hide_closed_backlogs, @main_backlog)
   end
 
   def show
