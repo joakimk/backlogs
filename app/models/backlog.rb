@@ -55,7 +55,6 @@ class Backlog < ActiveRecord::Base
     days_to_eta.weekdays_from(start_date).strftime("%Y-%m-%d")
   end
   
-
   def self.find_by_project(project, hide_closed_backlogs = false, main_backlog = nil)
     find(:all, :include => :version,
                :conditions => "versions.project_id=#{project.id} " +
