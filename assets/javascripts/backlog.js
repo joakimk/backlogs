@@ -255,7 +255,7 @@ RBL.Backlog = Class.create(RBL.Model, {
   },
   
   isMainBacklog: function(){
-    return this.getValue('.id')==0;
+    return this.getValue('.main_backlog') == "true";
   },
   
   isMaximized: function(){

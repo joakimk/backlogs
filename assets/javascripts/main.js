@@ -73,7 +73,6 @@ RBL.newItem = function(){
 }
 
 RBL.hideOrShowTasks = function() {
-	console.log($("hide_tasks").checked);
   if($("hide_tasks").checked) {
 		$$(".item_tasks").each(function(e) { e.hide() });
 		$$(".add_task").each(function(e) { e.hide() });

@@ -126,7 +126,7 @@
   height: 55px;
 }
 
-.backlog .header .id {
+.backlog .header .id, .backlog .header .main_backlog {
   display: none;
 }
 
