@@ -32,6 +32,10 @@ This plugin has only been tested in the following environments:
 * Redmine 0.8.4
 * PostgreSQL 8.2.6 (Might work with other databases and version but I've not tested it fully yet)
 
+= TODO
+
+* Add a "How to run the tests" section to make contributions simpler / better.
+
 = License
 
 This plugin is released under the GPL v2 license. See LICENSE for more information.
